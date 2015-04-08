@@ -42,5 +42,27 @@ def main():
     filename = fetch_image(url)
     set_image(filename)
 
+def loop():
+    """calls main(), waits for 24 hours to have passed,
+    then calls main() again.
+
+    The function actually wakes up more often than that,
+    since the PC might spend some time in suspend/hibernate
+    (standby), and i'm not sure how time.sleep() is affected
+    by that."""
+    while True:
+        cur_time = time.time()
+        wakeup_at = cur_time + (60*60*24)
+
+        while time.time() < wakeup_at:
+            time.sleep(300) # sleep for five minutes
+
+        main()
+
 if __name__ == "__main__":
+    import sys, time
     main()
+
+    if '-l' in sys.argv:
+        loop()
+
